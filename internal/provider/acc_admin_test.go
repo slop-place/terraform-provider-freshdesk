@@ -44,16 +44,25 @@ resource "freshdesk_admin_group" "test" {
 			{
 				Config: fmt.Sprintf(`
 resource "freshdesk_admin_group" "test" {
-  name           = "%s-updated"
-  description    = "updated by the acceptance suite"
-  type           = "support_agent_group"
-  unassigned_for = "8h"
-}`, name),
+  name             = "%s-updated"
+  description      = "updated by the acceptance suite"
+  type             = "support_agent_group"
+  unassigned_for   = "8h"
+  business_hour_id = data.freshdesk_business_hours_list.all.business_hours[0].id
+}
+
+data "freshdesk_business_hours_list" "all" {}
+`, name),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("freshdesk_admin_group.test",
 						"name", name+"-updated"),
 					resource.TestCheckResourceAttr("freshdesk_admin_group.test",
 						"unassigned_for", "8h"),
+					// The admin API names this business_calendar_id; sending
+					// business_hour_id to it is answered with a 400.
+					resource.TestCheckResourceAttrPair("freshdesk_admin_group.test",
+						"business_hour_id",
+						"data.freshdesk_business_hours_list.all", "business_hours.0.id"),
 				),
 			},
 			{

@@ -14,6 +14,10 @@ type TimeEntry struct {
 	Note     string `json:"note"`
 	// TimeSpent is "HH:MM".
 	TimeSpent string `json:"time_spent"`
+	// TimeSpentInSeconds is the same duration as a number.
+	TimeSpentInSeconds int `json:"time_spent_in_seconds"`
+	// CompanyID is the company of the ticket's requester.
+	CompanyID int64 `json:"company_id"`
 	// Billable marks the entry as chargeable.
 	Billable bool `json:"billable"`
 	// TimerRunning is true while the entry's timer is counting.

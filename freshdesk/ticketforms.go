@@ -10,6 +10,8 @@ type TicketForm struct {
 	Description string `json:"description"`
 	// Default marks the form used when no other applies.
 	Default bool `json:"default"`
+	// NonEditable marks a form Freshdesk manages and will not let you change.
+	NonEditable bool `json:"non_editable"`
 	// Fields is populated when the form is read individually.
 	Fields        []TicketFormField `json:"fields,omitempty"`
 	LastUpdatedBy int64             `json:"last_updated_by"`

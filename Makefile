@@ -53,6 +53,23 @@ cover:
 testacc:
 	TF_ACC=1 go test -count=1 -timeout 30m -v ./internal/provider/...
 
+## fieldaudit: check the client maps every field the live API returns.
+## Requires FRESHDESK_DOMAIN and FRESHDESK_API_KEY, and a seeded sandbox
+## (run `make seed` first if the account is empty).
+.PHONY: fieldaudit
+fieldaudit:
+	python3 internal/apispec/fieldaudit.py
+
+## seed: create one record of each kind the field audit would otherwise skip.
+.PHONY: seed
+seed:
+	bash internal/apispec/seed.sh
+
+## clean-sandbox: remove records left by the acceptance suite or the audit.
+.PHONY: clean-sandbox
+clean-sandbox:
+	bash internal/apispec/cleanup.sh
+
 ## coverage-api: verify the client still covers the documented API surface.
 .PHONY: coverage-api
 coverage-api:

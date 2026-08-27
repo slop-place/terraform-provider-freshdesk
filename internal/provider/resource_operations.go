@@ -353,34 +353,39 @@ func (m *emailMailboxModel) Apply(b *freshdesk.EmailMailbox) {
 	// omits the password, so echoing it back would wipe it from state.
 }
 
-// NewEmailMailboxResource returns the freshdesk_email_mailbox resource.
-func NewEmailMailboxResource() resource.Resource {
-	build := func(plan *emailMailboxModel, d *diagnostics) freshdesk.EmailMailboxRequest {
-		req := freshdesk.EmailMailboxRequest{
-			Name:              strPtr(plan.Name),
-			SupportEmail:      strPtr(plan.SupportEmail),
-			GroupID:           int64Ptr(plan.GroupID),
-			ProductID:         int64Ptr(plan.ProductID),
-			DefaultReplyEmail: boolPtr(plan.DefaultReplyEmail),
-			Active:            boolPtr(plan.Active),
-			MailboxType:       strPtr(plan.MailboxType),
-			DisableVerify:     boolPtr(plan.DisableVerify),
-		}
-
-		if raw := jsonAttrPtr(plan.CustomMailbox, d, "custom_mailbox"); raw != nil {
-			obj, ok := raw.(map[string]any)
-			if !ok {
-				d.AddError("Invalid custom_mailbox", "The value must be a JSON object.")
-
-				return req
-			}
-
-			req.CustomMailbox = &obj
-		}
-
-		return req
+// emailMailboxRequestFor maps a plan into the API payload. The connection
+// settings pass through verbatim, because the keys Freshdesk accepts differ by
+// mail provider and by authentication method.
+func emailMailboxRequestFor(
+	plan *emailMailboxModel,
+	d *diagnostics,
+) freshdesk.EmailMailboxRequest {
+	req := freshdesk.EmailMailboxRequest{
+		Name:              strPtr(plan.Name),
+		SupportEmail:      strPtr(plan.SupportEmail),
+		GroupID:           int64Ptr(plan.GroupID),
+		ProductID:         int64Ptr(plan.ProductID),
+		DefaultReplyEmail: boolPtr(plan.DefaultReplyEmail),
+		Active:            boolPtr(plan.Active),
+		MailboxType:       strPtr(plan.MailboxType),
+		DisableVerify:     boolPtr(plan.DisableVerify),
 	}
 
+	if raw := jsonAttrPtr(plan.CustomMailbox, d, "custom_mailbox"); raw != nil {
+		obj, ok := raw.(map[string]any)
+		if !ok {
+			d.AddError("Invalid custom_mailbox", "The value must be a JSON object.")
+
+			return req
+		}
+		req.CustomMailbox = &obj
+	}
+
+	return req
+}
+
+// NewEmailMailboxResource returns the freshdesk_email_mailbox resource.
+func NewEmailMailboxResource() resource.Resource {
 	return &emailMailboxResource{
 		name:  "email_mailbox",
 		label: "email mailbox",
@@ -446,7 +451,7 @@ func NewEmailMailboxResource() resource.Resource {
 		createFn: func(
 			ctx context.Context, c *freshdesk.Client, plan *emailMailboxModel, d *diagnostics,
 		) (*freshdesk.EmailMailbox, error) {
-			return c.CreateEmailMailbox(ctx, build(plan, d))
+			return c.CreateEmailMailbox(ctx, emailMailboxRequestFor(plan, d))
 		},
 		readFn: func(
 			ctx context.Context, c *freshdesk.Client, id int64, _ *emailMailboxModel,
@@ -456,7 +461,7 @@ func NewEmailMailboxResource() resource.Resource {
 		updateFn: func(
 			ctx context.Context, c *freshdesk.Client, id int64, plan, _ *emailMailboxModel, d *diagnostics,
 		) (*freshdesk.EmailMailbox, error) {
-			return c.UpdateEmailMailbox(ctx, id, build(plan, d))
+			return c.UpdateEmailMailbox(ctx, id, emailMailboxRequestFor(plan, d))
 		},
 		deleteFn: func(ctx context.Context, c *freshdesk.Client, id int64, _ *emailMailboxModel) error {
 			return c.DeleteEmailMailbox(ctx, id)

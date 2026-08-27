@@ -1,5 +1,38 @@
 # Changelog
 
+## 0.1.3 (2026-08-27)
+
+### Fixed
+
+- `freshdesk_admin_group.business_hour_id` now works. The admin API calls the
+  field `business_calendar_id` and answers `400` to `business_hour_id`, which
+  the client was sending, so setting the attribute failed the apply and reading
+  it always returned null. The Terraform attribute keeps its name, matching
+  `freshdesk_group`.
+- `freshdesk_ticket` now reports `support_email` and the ticket's BCC list.
+  Both were absent from the client despite being documented as present.
+
+### Added
+
+Fifteen fields the API returns that the client was discarding on read: agent
+`deactivated`, `api_key_enabled`, `last_active_at` and `agent_operational_status`;
+contact `guest_name` and `guest_profile_pic`; ticket `form_id`; ticket field
+`archived`; ticket form `non_editable`; solution category `icon`; time entry
+`company_id` and `time_spent_in_seconds`; group `group_type` and
+`agent_availability_status`; and the admin group availability settings.
+
+### Tooling
+
+- `make fieldaudit` compares every live API response against the client's
+  struct tags and fails on any field the client does not map. This is what
+  found the bugs above; it covers 27 endpoints.
+- `make seed` creates one record of each kind the audit would otherwise skip,
+  because an empty account hides most of the surface. `make clean-sandbox`
+  removes them again.
+- Round-trip tests assert that every key of a practitioner-supplied JSON body
+  reaches the API, at any depth. They were checked against the 0.1.2 bug and
+  do fail on it.
+
 ## 0.1.2 (2026-08-27)
 
 ### Fixed

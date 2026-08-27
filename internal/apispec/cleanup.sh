@@ -1,6 +1,6 @@
 #!/bin/bash
-# Remove records left behind by an interrupted acceptance run.
-# Everything the suite creates is prefixed "tfacc-".
+# Remove records left behind by an interrupted acceptance run or by the
+# field audit's fixtures. Everything they create is prefixed tfacc- or tfaudit-.
 set -u
 H="${FRESHDESK_DOMAIN:?set FRESHDESK_DOMAIN}.freshdesk.com"
 K="${FRESHDESK_API_KEY:?set FRESHDESK_API_KEY}"
@@ -17,7 +17,7 @@ except Exception: sys.exit()
 if not isinstance(items,list): sys.exit()
 for i in items:
     n=str(i.get('$field') or '')
-    if n.startswith('tfacc-'):
+    if n.startswith(('tfacc-', 'tfaudit-')):
         print(i['id'])
 " | while read -r id; do
     [ -n "$id" ] && api -X DELETE "https://$H/api/v2/$path/$id" -o /dev/null -w "deleted $path/$id (%{http_code})\n"
@@ -34,13 +34,28 @@ try: items=json.load(sys.stdin)
 except Exception: sys.exit()
 if not isinstance(items,list): sys.exit()
 for i in items:
-    if str(i.get('name') or '').startswith('tfacc-'):
+    if str(i.get('name') or '').startswith(('tfacc-', 'tfaudit-')):
         print(i['id'])
 " | while read -r id; do
     [ -n "$id" ] && api -X DELETE "https://$H/api/v2/contacts/$id/hard_delete?force=true" \
       -o /dev/null -w "hard-deleted contacts/$id (%{http_code})\n"
   done
 }
+
+# Automation rules the audit seeds, per rule type.
+for t in 1 3 4; do
+  api "https://$H/api/v2/automations/$t/rules" | python3 -c "
+import json,sys
+try: items=json.load(sys.stdin)
+except Exception: sys.exit()
+for i in items if isinstance(items,list) else []:
+    if str(i.get('name') or '').startswith(('tfacc-','tfaudit-')):
+        print(i['id'])
+" | while read -r id; do
+    [ -n "$id" ] && api -X DELETE "https://$H/api/v2/automations/$t/rules/$id" \
+      -o /dev/null -w "deleted automations/$t/rules/$id (%{http_code})\n"
+  done
+done
 
 purge groups
 purge admin/groups
@@ -63,7 +78,7 @@ import json,sys
 try: items=json.load(sys.stdin)
 except Exception: sys.exit()
 for i in items if isinstance(items,list) else []:
-    if str(i.get('name') or '').startswith('tfacc-'):
+    if str(i.get('name') or '').startswith(('tfacc-', 'tfaudit-')):
         print(i['id'])
 " | while read -r id; do
   [ -n "$id" ] && api -X PUT -d '{"active":false}' "https://$H/api/v2/sla_policies/$id" \

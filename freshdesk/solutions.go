@@ -27,6 +27,8 @@ type SolutionCategory struct {
 	Description string `json:"description"`
 	// VisibleInPortals lists the portal IDs the category appears in.
 	VisibleInPortals []int64 `json:"visible_in_portals"`
+	// Icon is the artwork shown beside the category in the portal.
+	Icon any `json:"icon"`
 	// LanguageID and Language identify a translated copy of the category.
 	LanguageID int64  `json:"language_id,omitempty"`
 	Language   string `json:"language,omitempty"`

@@ -56,6 +56,10 @@ type Contact struct {
 	// OrgContactID identifies the contact across the Freshworks organisation.
 	OrgContactID    ID         `json:"org_contact_id"`
 	OrgContactIDStr FlexString `json:"org_contact_id_str"`
+	// GuestName and GuestProfilePic identify a requester who wrote in
+	// without an account.
+	GuestName       string `json:"guest_name"`
+	GuestProfilePic string `json:"guest_profile_pic"`
 
 	CreatedAt Time `json:"created_at"`
 	UpdatedAt Time `json:"updated_at"`

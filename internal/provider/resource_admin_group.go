@@ -45,7 +45,7 @@ func (m *adminGroupModel) Apply(g *freshdesk.AdminGroup) {
 	m.Type = optString(g.Type)
 	m.EscalateTo = optInt64(g.EscalateTo)
 	m.UnassignedFor = optString(g.UnassignedFor)
-	m.BusinessHourID = optInt64(g.BusinessHourID)
+	m.BusinessHourID = optInt64(g.BusinessCalendarID)
 	m.CreatedAt = timeString(g.CreatedAt)
 	m.UpdatedAt = timeString(g.UpdatedAt)
 
@@ -63,12 +63,12 @@ func adminGroupRequest(
 	creating bool,
 ) freshdesk.AdminGroupRequest {
 	req := freshdesk.AdminGroupRequest{
-		Name:           strPtr(plan.Name),
-		Description:    strPtr(plan.Description),
-		EscalateTo:     int64Ptr(plan.EscalateTo),
-		UnassignedFor:  strPtr(plan.UnassignedFor),
-		AgentIDs:       toInt64Slice(ctx, plan.AgentIDs, diags),
-		BusinessHourID: int64Ptr(plan.BusinessHourID),
+		Name:               strPtr(plan.Name),
+		Description:        strPtr(plan.Description),
+		EscalateTo:         int64Ptr(plan.EscalateTo),
+		UnassignedFor:      strPtr(plan.UnassignedFor),
+		AgentIDs:           toInt64Slice(ctx, plan.AgentIDs, diags),
+		BusinessCalendarID: int64Ptr(plan.BusinessHourID),
 	}
 
 	req.AutomaticAgentAssignment = decodeAgentAssignment(plan.AutomaticAgentAssignment, diags)
@@ -159,7 +159,9 @@ func NewAdminGroupResource() resource.Resource {
 					Optional: true,
 					Computed: true,
 					MarkdownDescription: "ID of the business-hours calendar the group follows. " +
-						"Defaults to the account's default calendar.",
+						"Defaults to the account's default calendar.\n\n-> The admin API calls " +
+						"this field `business_calendar_id`; the attribute keeps the name " +
+						"`business_hour_id` so it matches `freshdesk_group`.",
 				},
 				"automatic_agent_assignment": schema.StringAttribute{
 					Optional:   true,

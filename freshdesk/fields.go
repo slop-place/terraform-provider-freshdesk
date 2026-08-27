@@ -31,6 +31,9 @@ type TicketField struct {
 	// PortalCC and PortalCCTo configure the CC control on the portal form.
 	PortalCC   bool   `json:"portal_cc"`
 	PortalCCTo string `json:"portal_cc_to"`
+	// Archived marks a field withdrawn from the form but kept on
+	// existing tickets.
+	Archived bool `json:"archived"`
 
 	// Choices is raw because its shape depends on the field; use its Choices
 	// method for a custom dropdown.

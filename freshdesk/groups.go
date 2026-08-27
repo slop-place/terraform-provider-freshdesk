@@ -18,9 +18,14 @@ type Group struct {
 	AgentIDs []int64 `json:"agent_ids"`
 	// AutoTicketAssign is 0 (off) or 1 (on) on this endpoint. Richer assignment
 	// types are only settable through the admin groups API.
-	AutoTicketAssign int  `json:"auto_ticket_assign"`
-	CreatedAt        Time `json:"created_at"`
-	UpdatedAt        Time `json:"updated_at"`
+	AutoTicketAssign int `json:"auto_ticket_assign"`
+	// GroupType mirrors the admin API's "type"; it is read-only here.
+	GroupType string `json:"group_type"`
+	// AgentAvailabilityStatus reports whether the group's agents may mark
+	// themselves available for omniroute assignment.
+	AgentAvailabilityStatus bool `json:"agent_availability_status"`
+	CreatedAt               Time `json:"created_at"`
+	UpdatedAt               Time `json:"updated_at"`
 }
 
 // GroupRequest is the create/update payload for a group.
@@ -96,14 +101,24 @@ const (
 // AdminGroup is a group as modelled by the newer /admin/groups API, which adds
 // group types and the richer automatic-assignment settings.
 type AdminGroup struct {
-	ID             int64   `json:"id"`
-	Name           string  `json:"name"`
-	Description    string  `json:"description"`
-	Type           string  `json:"type"`
-	BusinessHourID int64   `json:"business_hour_id"`
-	EscalateTo     int64   `json:"escalate_to"`
-	UnassignedFor  string  `json:"unassigned_for"`
-	AgentIDs       []int64 `json:"agent_ids"`
+	ID          int64  `json:"id"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Type        string `json:"type"`
+	// BusinessCalendarID is the admin API's name for the business-hours
+	// calendar. The /groups endpoint calls the same value business_hour_id,
+	// and sending that name to this endpoint is rejected with a 400.
+	BusinessCalendarID int64   `json:"business_calendar_id"`
+	EscalateTo         int64   `json:"escalate_to"`
+	UnassignedFor      string  `json:"unassigned_for"`
+	AgentIDs           []int64 `json:"agent_ids"`
+	// AllowAgentsToChangeAvailability lets agents opt themselves in and out
+	// of omniroute assignment.
+	AllowAgentsToChangeAvailability bool `json:"allow_agents_to_change_availability"`
+	// AgentAvailabilityStatus reports whether availability tracking is on.
+	AgentAvailabilityStatus bool `json:"agent_availability_status"`
+	// ReassignmentEnabled controls whether unanswered tickets are handed on.
+	ReassignmentEnabled any `json:"reassignment_enabled"`
 	// AutomaticAgentAssignment carries the omniroute assignment configuration.
 	AutomaticAgentAssignment *AutomaticAgentAssignment `json:"automatic_agent_assignment,omitempty"`
 	CreatedAt                Time                      `json:"created_at"`
@@ -119,14 +134,17 @@ type AutomaticAgentAssignment = map[string]any
 
 // AdminGroupRequest is the create/update payload for an admin group.
 type AdminGroupRequest struct {
-	Name                     *string                   `json:"name,omitempty"`
-	Description              *string                   `json:"description,omitempty"`
-	Type                     *string                   `json:"type,omitempty"`
-	EscalateTo               *int64                    `json:"escalate_to,omitempty"`
-	UnassignedFor            *string                   `json:"unassigned_for,omitempty"`
-	AgentIDs                 []int64                   `json:"agent_ids,omitempty"`
-	BusinessHourID           *int64                    `json:"business_hour_id,omitempty"`
-	AutomaticAgentAssignment *AutomaticAgentAssignment `json:"automatic_agent_assignment,omitempty"`
+	Name          *string `json:"name,omitempty"`
+	Description   *string `json:"description,omitempty"`
+	Type          *string `json:"type,omitempty"`
+	EscalateTo    *int64  `json:"escalate_to,omitempty"`
+	UnassignedFor *string `json:"unassigned_for,omitempty"`
+	AgentIDs      []int64 `json:"agent_ids,omitempty"`
+	// BusinessCalendarID is the admin API's name for the calendar; sending
+	// business_hour_id here is rejected with a 400.
+	BusinessCalendarID              *int64                    `json:"business_calendar_id,omitempty"`
+	AllowAgentsToChangeAvailability *bool                     `json:"allow_agents_to_change_availability,omitempty"`
+	AutomaticAgentAssignment        *AutomaticAgentAssignment `json:"automatic_agent_assignment,omitempty"`
 
 	// ClearEscalateTo sends "escalate_to": null.
 	ClearEscalateTo bool `json:"-"`

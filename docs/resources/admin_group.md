@@ -24,6 +24,8 @@ An agent group managed through the admin API, which adds group types and the omn
 - `agent_ids` (Set of Number) IDs of the agents who belong to the group.
 - `automatic_agent_assignment` (String) Omniroute assignment settings as a JSON object, for example `jsonencode({ enabled = true, assignment_type = 1 })`.
 - `business_hour_id` (Number) ID of the business-hours calendar the group follows. Defaults to the account's default calendar.
+
+-> The admin API calls this field `business_calendar_id`; the attribute keeps the name `business_hour_id` so it matches `freshdesk_group`.
 - `description` (String) Description of the group.
 - `escalate_to` (Number) ID of the agent emailed when a ticket stays unassigned. Freshdesk defaults this to the account administrator.
 - `type` (String) Group type: `support_agent_group` or `field_agent_group`.

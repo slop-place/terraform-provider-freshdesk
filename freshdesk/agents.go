@@ -28,16 +28,24 @@ type Agent struct {
 	Signature   string `json:"signature"`
 	TicketScope int    `json:"ticket_scope"`
 	// Type is the string form ("support_agent", "field_agent", "collaborator").
-	Type                 string       `json:"type"`
-	GroupIDs             []int64      `json:"group_ids"`
-	RoleIDs              []int64      `json:"role_ids"`
-	SkillIDs             []int64      `json:"skill_ids"`
-	ContributionGroupIDs []int64      `json:"contribution_group_ids"`
-	FocusMode            bool         `json:"focus_mode"`
-	AvailableSince       Time         `json:"available_since"`
-	Contact              AgentContact `json:"contact"`
-	CreatedAt            Time         `json:"created_at"`
-	UpdatedAt            Time         `json:"updated_at"`
+	Type                 string  `json:"type"`
+	GroupIDs             []int64 `json:"group_ids"`
+	RoleIDs              []int64 `json:"role_ids"`
+	SkillIDs             []int64 `json:"skill_ids"`
+	ContributionGroupIDs []int64 `json:"contribution_group_ids"`
+	FocusMode            bool    `json:"focus_mode"`
+	AvailableSince       Time    `json:"available_since"`
+	// Deactivated marks an agent whose access has been withdrawn.
+	Deactivated bool `json:"deactivated"`
+	// APIKeyEnabled reports whether the agent may use the API.
+	APIKeyEnabled bool `json:"api_key_enabled"`
+	// AgentOperationalStatus is the omniroute availability state.
+	AgentOperationalStatus any `json:"agent_operational_status"`
+	// LastActiveAt is when the agent last did anything.
+	LastActiveAt Time         `json:"last_active_at"`
+	Contact      AgentContact `json:"contact"`
+	CreatedAt    Time         `json:"created_at"`
+	UpdatedAt    Time         `json:"updated_at"`
 }
 
 // AgentContact is the identity record embedded in an Agent.

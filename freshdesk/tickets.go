@@ -59,6 +59,8 @@ type Ticket struct {
 	CompanyID     int64 `json:"company_id"`
 	ProductID     int64 `json:"product_id"`
 	EmailConfigID int64 `json:"email_config_id"`
+	// FormID is the ticket form the ticket was raised through.
+	FormID int64 `json:"form_id"`
 
 	Name             string `json:"name"`
 	Email            string `json:"email"`
@@ -67,11 +69,14 @@ type Ticket struct {
 	FacebookID       string `json:"facebook_id"`
 	TwitterID        string `json:"twitter_id"`
 
-	ToEmails       []string `json:"to_emails"`
-	CCEmails       []string `json:"cc_emails"`
-	FwdEmails      []string `json:"fwd_emails"`
-	ReplyCCEmails  []string `json:"reply_cc_emails"`
-	TicketCCEmails []string `json:"ticket_cc_emails"`
+	ToEmails        []string `json:"to_emails"`
+	CCEmails        []string `json:"cc_emails"`
+	FwdEmails       []string `json:"fwd_emails"`
+	ReplyCCEmails   []string `json:"reply_cc_emails"`
+	TicketCCEmails  []string `json:"ticket_cc_emails"`
+	TicketBccEmails []string `json:"ticket_bcc_emails"`
+	// SupportEmail is the address the ticket arrived on.
+	SupportEmail string `json:"support_email"`
 
 	Tags         []string     `json:"tags"`
 	CustomFields CustomFields `json:"custom_fields"`
