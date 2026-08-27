@@ -127,11 +127,9 @@ type ScenarioAutomation struct {
 	UpdatedAt   Time             `json:"updated_at"`
 }
 
-// ScenarioAction is one action within a scenario automation.
-type ScenarioAction struct {
-	Name  string `json:"name"`
-	Value any    `json:"value,omitempty"`
-}
+// ScenarioAction is one action within a scenario automation. As with
+// AutomationAction, the shape varies by action type, so every key is kept.
+type ScenarioAction = map[string]any
 
 // ListScenarioAutomations returns every scenario automation.
 func (c *Client) ListScenarioAutomations(ctx context.Context, opts ListOptions) ([]ScenarioAutomation, error) {

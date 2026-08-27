@@ -72,24 +72,13 @@ type Mailbox struct {
 }
 
 // CustomMailbox holds the IMAP/SMTP settings of a customer-owned mailbox.
-type CustomMailbox struct {
-	IncomingSettings *MailServerSettings `json:"incoming,omitempty"`
-	OutgoingSettings *MailServerSettings `json:"outgoing,omitempty"`
-	// AccessTokenID references stored OAuth credentials, where used.
-	AccessTokenID int64 `json:"access_token_id,omitempty"`
-}
-
-// MailServerSettings describes one leg of a custom mailbox connection.
-type MailServerSettings struct {
-	MailServer string `json:"mail_server,omitempty"`
-	Port       int    `json:"port,omitempty"`
-	UserName   string `json:"user_name,omitempty"`
-	// Password is write-only; Freshdesk never returns it.
-	Password           string `json:"password,omitempty"`
-	UseSSL             *bool  `json:"use_ssl,omitempty"`
-	DeleteFromServer   *bool  `json:"delete_from_server,omitempty"`
-	AuthenticationType string `json:"authentication_type,omitempty"`
-}
+//
+// The accepted keys differ by provider and by authentication method — OAuth
+// mailboxes carry an access_token_id where password mailboxes carry a
+// password — so the settings pass through verbatim rather than being
+// enumerated. Each leg ("incoming", "outgoing") takes mail_server, port,
+// user_name, password, use_ssl, delete_from_server and authentication_type.
+type CustomMailbox = map[string]any
 
 // MailboxCSATSettings configures a mailbox's satisfaction survey.
 type MailboxCSATSettings struct {

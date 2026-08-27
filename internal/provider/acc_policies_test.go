@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"regexp"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
@@ -163,6 +164,87 @@ resource "freshdesk_automation_rule" "test" {
 				// The API normalises the JSON bodies, so they are compared by
 				// the checks above rather than byte-for-byte.
 				ImportStateVerifyIgnore: []string{"conditions", "actions", "performer", "events"},
+			},
+		},
+	})
+}
+
+// TestAccAutomationRuleWebhook reproduces the shape that made Freshdesk answer
+// 500: a trigger_webhook action carries request_type, content_type,
+// content_layout, url, content and custom_headers, and dropping any of them
+// leaves the API with an action it cannot process.
+func TestAccAutomationRuleWebhook(t *testing.T) {
+	name := accName(t, "webhook")
+
+	// example.test is reserved by RFC 6761 and never resolves, so the rule
+	// cannot reach anything even if Freshdesk fires it.
+	const action = `[{
+    field_name     = "trigger_webhook"
+    request_type   = "POST"
+    content_type   = "JSON"
+    content_layout = "2"
+    url            = "https://hooks.example.test/tfacc"
+    content        = { ticket_id = "{{ticket.id}}" }
+    custom_headers = { "x-acceptance-secret" = "not-a-real-secret" }
+  }]`
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testAccPreCheck(t) },
+		ProtoV6ProviderFactories: testAccProtoV6Providers,
+		CheckDestroy: checkDestroyed(t, "freshdesk_automation_rule",
+			func(ctx context.Context, c *freshdesk.Client, id int64) error {
+				_, err := c.GetAutomationRule(ctx, freshdesk.AutomationTypeTicketUpdate, id)
+
+				return err
+			}),
+		Steps: []resource.TestStep{
+			{
+				Config: fmt.Sprintf(`
+resource "freshdesk_automation_rule" "webhook" {
+  rule_type = 4
+  name      = %q
+  active    = false
+  performer = jsonencode({ type = 1 })
+
+  events = jsonencode([
+    { field_name = "status", from = "--", to = "--" },
+  ])
+
+  actions = jsonencode(%s)
+}`, name, action),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("freshdesk_automation_rule.webhook", "name", name),
+					// The whole action must survive the round trip, not just
+					// field_name.
+					resource.TestMatchResourceAttr("freshdesk_automation_rule.webhook",
+						"actions", regexp.MustCompile(`hooks\.example\.test`)),
+					resource.TestMatchResourceAttr("freshdesk_automation_rule.webhook",
+						"actions", regexp.MustCompile(`custom_headers`)),
+					resource.TestMatchResourceAttr("freshdesk_automation_rule.webhook",
+						"actions", regexp.MustCompile(`"content_type":"JSON"`)),
+				),
+			},
+			{
+				// Activating it exercises the update path with the same body.
+				Config: fmt.Sprintf(`
+resource "freshdesk_automation_rule" "webhook" {
+  rule_type = 4
+  name      = "%s-live"
+  active    = true
+  performer = jsonencode({ type = 1 })
+
+  events = jsonencode([
+    { field_name = "status", from = "--", to = "--" },
+  ])
+
+  actions = jsonencode(%s)
+}`, name, action),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("freshdesk_automation_rule.webhook",
+						"active", "true"),
+					resource.TestMatchResourceAttr("freshdesk_automation_rule.webhook",
+						"actions", regexp.MustCompile(`hooks\.example\.test`)),
+				),
 			},
 		},
 	})

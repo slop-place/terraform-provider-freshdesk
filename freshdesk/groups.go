@@ -111,11 +111,11 @@ type AdminGroup struct {
 }
 
 // AutomaticAgentAssignment configures omniroute ticket assignment for a group.
-type AutomaticAgentAssignment struct {
-	Enabled          bool           `json:"enabled"`
-	AssignmentType   int            `json:"assignment_type,omitempty"`
-	AssignmentConfig map[string]any `json:"assignment_config,omitempty"`
-}
+//
+// The assignment options depend on the plan and on the assignment type, so
+// every key passes through verbatim. The common ones are enabled,
+// assignment_type and assignment_config.
+type AutomaticAgentAssignment = map[string]any
 
 // AdminGroupRequest is the create/update payload for an admin group.
 type AdminGroupRequest struct {
