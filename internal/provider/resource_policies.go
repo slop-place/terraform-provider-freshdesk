@@ -391,6 +391,7 @@ func automationRuleRequest(
 }
 
 // decodeAutomationActions reads the actions array from its JSON attribute.
+// Every key is passed through verbatim — see freshdesk.AutomationAction.
 func decodeAutomationActions(raw jsonValueType, d *diagnostics) []freshdesk.AutomationAction {
 	decoded := jsonAttrPtr(raw, d, "actions")
 	if decoded == nil {
@@ -401,15 +402,11 @@ func decodeAutomationActions(raw jsonValueType, d *diagnostics) []freshdesk.Auto
 
 	actions := make([]freshdesk.AutomationAction, 0, len(objects))
 	for _, obj := range objects {
-		action := freshdesk.AutomationAction{Value: obj["value"]}
-		if name, ok := obj["field_name"].(string); ok {
-			action.FieldName = name
+		if _, ok := obj["field_name"].(string); !ok {
+			d.AddError("Invalid action", "Each action must carry a string field_name.")
+			continue
 		}
-
-		if email, ok := obj["email"].(map[string]any); ok {
-			action.Email = email
-		}
-		actions = append(actions, action)
+		actions = append(actions, freshdesk.AutomationAction(obj))
 	}
 
 	return actions

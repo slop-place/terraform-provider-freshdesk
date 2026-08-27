@@ -306,8 +306,24 @@ func TestAutomationRuleRequestDecodesJSON(t *testing.T) {
 		t.Errorf("conditions = %+v", req.Conditions)
 	}
 
-	if len(req.Actions) != 1 || req.Actions[0].FieldName != "group_id" {
+	if len(req.Actions) != 1 || req.Actions[0]["field_name"] != "group_id" {
 		t.Errorf("actions = %+v", req.Actions)
+	}
+
+	webhook := automationRuleModel{Actions: jsonStringValue(
+		`[{"field_name":"trigger_webhook","request_type":"POST","content_type":"JSON",` +
+			`"content_layout":"2","url":"https://example.test/hooks/x",` +
+			`"content":{"ticket_id":"{{ticket.id}}"},"custom_headers":{"x-secret":"s"}}]`)}
+
+	var webhookDiags diag.Diagnostics
+
+	webhookReq := automationRuleRequest(&webhook, &webhookDiags)
+	if webhookDiags.HasError() {
+		t.Fatalf("diagnostics: %v", webhookDiags)
+	}
+
+	if webhookReq.Actions[0]["content_type"] != "JSON" || webhookReq.Actions[0]["custom_headers"] == nil {
+		t.Errorf("webhook action fields must pass through verbatim, got %+v", webhookReq.Actions[0])
 	}
 
 	if req.Performer["type"] != float64(1) {

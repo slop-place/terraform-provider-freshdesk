@@ -53,13 +53,11 @@ type AutomationConditionSet struct {
 	Properties []map[string]any `json:"properties"`
 }
 
-// AutomationAction is one action applied by a rule.
-type AutomationAction struct {
-	FieldName string `json:"field_name"`
-	Value     any    `json:"value,omitempty"`
-	// Email carries the message body for email-sending actions.
-	Email map[string]any `json:"email,omitempty"`
-}
+// AutomationAction is one action applied by a rule. Action shapes vary
+// wildly per field_name (webhook actions alone carry request_type, url,
+// content_type, content_layout, content and custom_headers), so the map
+// passes every key through verbatim instead of enumerating them.
+type AutomationAction = map[string]any
 
 // AutomationRuleRequest is the create/update payload for an automation rule.
 type AutomationRuleRequest struct {
