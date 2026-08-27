@@ -349,7 +349,10 @@ func (m *automationRuleModel) Apply(r *freshdesk.AutomationRule) {
 		m.Events = jsonEncoded(r.Events)
 	}
 
-	if r.Conditions != nil {
+	// A rule created without conditions still reads back with one empty set,
+	// which would turn an unset attribute into a value and fail Terraform's
+	// consistency check. Keep it unset unless the set carries real properties.
+	if r.Conditions != nil && (!m.Conditions.IsNull() || !vacuousConditions(r.Conditions)) {
 		m.Conditions = jsonEncoded(r.Conditions)
 	}
 
@@ -390,7 +393,21 @@ func automationRuleRequest(
 	return req
 }
 
+// vacuousConditions reports whether a condition set carries no actual rules.
+// Freshdesk answers a rule that was created without conditions with a single
+// named set whose properties are empty.
+func vacuousConditions(sets []freshdesk.AutomationConditionSet) bool {
+	for _, set := range sets {
+		if len(set.Properties) > 0 {
+			return false
+		}
+	}
+
+	return true
+}
+
 // decodeAutomationActions reads the actions array from its JSON attribute.
+// Every key is passed through verbatim — see freshdesk.AutomationAction.
 func decodeAutomationActions(raw jsonValueType, d *diagnostics) []freshdesk.AutomationAction {
 	decoded := jsonAttrPtr(raw, d, "actions")
 	if decoded == nil {
@@ -401,15 +418,11 @@ func decodeAutomationActions(raw jsonValueType, d *diagnostics) []freshdesk.Auto
 
 	actions := make([]freshdesk.AutomationAction, 0, len(objects))
 	for _, obj := range objects {
-		action := freshdesk.AutomationAction{Value: obj["value"]}
-		if name, ok := obj["field_name"].(string); ok {
-			action.FieldName = name
+		if _, ok := obj["field_name"].(string); !ok {
+			d.AddError("Invalid action", "Each action must carry a string field_name.")
+			continue
 		}
-
-		if email, ok := obj["email"].(map[string]any); ok {
-			action.Email = email
-		}
-		actions = append(actions, action)
+		actions = append(actions, obj)
 	}
 
 	return actions

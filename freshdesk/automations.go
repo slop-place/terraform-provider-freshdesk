@@ -53,13 +53,11 @@ type AutomationConditionSet struct {
 	Properties []map[string]any `json:"properties"`
 }
 
-// AutomationAction is one action applied by a rule.
-type AutomationAction struct {
-	FieldName string `json:"field_name"`
-	Value     any    `json:"value,omitempty"`
-	// Email carries the message body for email-sending actions.
-	Email map[string]any `json:"email,omitempty"`
-}
+// AutomationAction is one action applied by a rule. Action shapes vary
+// wildly per field_name (webhook actions alone carry request_type, url,
+// content_type, content_layout, content and custom_headers), so the map
+// passes every key through verbatim instead of enumerating them.
+type AutomationAction = map[string]any
 
 // AutomationRuleRequest is the create/update payload for an automation rule.
 type AutomationRuleRequest struct {
@@ -129,11 +127,9 @@ type ScenarioAutomation struct {
 	UpdatedAt   Time             `json:"updated_at"`
 }
 
-// ScenarioAction is one action within a scenario automation.
-type ScenarioAction struct {
-	Name  string `json:"name"`
-	Value any    `json:"value,omitempty"`
-}
+// ScenarioAction is one action within a scenario automation. As with
+// AutomationAction, the shape varies by action type, so every key is kept.
+type ScenarioAction = map[string]any
 
 // ListScenarioAutomations returns every scenario automation.
 func (c *Client) ListScenarioAutomations(ctx context.Context, opts ListOptions) ([]ScenarioAutomation, error) {

@@ -88,7 +88,8 @@ func adminGroupRequest(
 }
 
 // decodeAgentAssignment reads the omniroute assignment settings from their
-// JSON attribute.
+// JSON attribute and passes every key through, because the accepted options
+// depend on the plan and on the assignment type.
 func decodeAgentAssignment(
 	raw jsonValueType,
 	diags *diagnostics,
@@ -105,20 +106,7 @@ func decodeAgentAssignment(
 		return nil
 	}
 
-	assignment := &freshdesk.AutomaticAgentAssignment{}
-	if enabled, ok := obj["enabled"].(bool); ok {
-		assignment.Enabled = enabled
-	}
-
-	if kind, ok := obj["assignment_type"].(float64); ok {
-		assignment.AssignmentType = int(kind)
-	}
-
-	if cfg, ok := obj["assignment_config"].(map[string]any); ok {
-		assignment.AssignmentConfig = cfg
-	}
-
-	return assignment
+	return &obj
 }
 
 // NewAdminGroupResource returns the freshdesk_admin_group resource.

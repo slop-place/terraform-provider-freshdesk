@@ -374,10 +374,8 @@ func NewEmailMailboxResource() resource.Resource {
 
 				return req
 			}
-			req.CustomMailbox = &freshdesk.CustomMailbox{
-				IncomingSettings: mailServerSettings(obj["incoming"]),
-				OutgoingSettings: mailServerSettings(obj["outgoing"]),
-			}
+
+			req.CustomMailbox = &obj
 		}
 
 		return req
@@ -464,45 +462,6 @@ func NewEmailMailboxResource() resource.Resource {
 			return c.DeleteEmailMailbox(ctx, id)
 		},
 	}
-}
-
-// mailServerSettings converts one decoded JSON leg of a custom mailbox.
-func mailServerSettings(raw any) *freshdesk.MailServerSettings {
-	obj, ok := raw.(map[string]any)
-	if !ok {
-		return nil
-	}
-
-	out := &freshdesk.MailServerSettings{}
-	if v, ok := obj["mail_server"].(string); ok {
-		out.MailServer = v
-	}
-
-	if v, ok := obj["port"].(float64); ok {
-		out.Port = int(v)
-	}
-
-	if v, ok := obj["user_name"].(string); ok {
-		out.UserName = v
-	}
-
-	if v, ok := obj["password"].(string); ok {
-		out.Password = v
-	}
-
-	if v, ok := obj["authentication_type"].(string); ok {
-		out.AuthenticationType = v
-	}
-
-	if v, ok := obj["use_ssl"].(bool); ok {
-		out.UseSSL = freshdesk.Ptr(v)
-	}
-
-	if v, ok := obj["delete_from_server"].(bool); ok {
-		out.DeleteFromServer = freshdesk.Ptr(v)
-	}
-
-	return out
 }
 
 // --- time entries --------------------------------------------------------
