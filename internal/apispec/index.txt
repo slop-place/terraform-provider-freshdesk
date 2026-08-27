@@ -1,0 +1,231 @@
+Introduction	Overview	What are APIs	#intro
+Introduction	What's New		#whats_new
+Introduction	Rate Limit	The number of API calls per hour	#ratelimit
+Introduction	Policies		#policies
+Introduction	Changelog		#change_log
+Getting Started	Authentication	How does it work? Who can access my helpdesk? Can everybody see my data?	#authentication
+Getting Started	Schema		#schema
+Getting Started	Embedding		#embedding
+Getting Started	Attachments		#attachments
+Getting Started	Errors	The list of error codes & error messages	#error
+Getting Started	Pagination	Pagination of Listing APIs	#pagination
+Getting Started	Best Practices		#best_practices
+Getting Started	Code Samples		#code_samples
+Quick Reference	API Index		#api_index
+Tickets	Tickets		#ticket_attributes
+Tickets	Create a Ticket	/api/v2/tickets	#create_ticket
+Tickets	Create an Outbound Email	/api/v2/tickets/outbound_email	#create_outbound_email
+Tickets	View a Ticket	/api/v2/tickets/[id]	#view_a_ticket
+Tickets	Ticket Association API		#ticket_association
+Tickets	List All Tickets	/api/v2/tickets	#list_all_tickets
+Tickets	Filter Tickets	/api/v2/search/tickets?query=[query]	#filter_tickets
+Tickets	Update a Ticket	/api/v2/tickets/[id]	#update_ticket
+Tickets	Update Multiple Tickets	/api/v2/tickets/bulk_update	#bulk_update_tickets
+Tickets	Forward a ticket	/api/v2/tickets/[id]/forward	#forward_tickets
+Tickets	Ticket Merge API	/api/v2/tickets/merge	#ticket_merge
+Tickets	Watcher		#watcher
+Tickets	Delete a Ticket	/api/v2/tickets/[id]	#delete_a_ticket
+Tickets	Delete Multiple Tickets	/api/v2/tickets/bulk_delete	#bulk_delete_tickets
+Tickets	Delete an attachment	/api/v2/attachments/[id]	#delete_an_attachment
+Tickets	Restore a Ticket	/api/v2/tickets/[id]/restore	#restore_a_ticket
+Tickets	List All Ticket Fields	/api/v2/ticket_fields	#list_all_ticket_fields
+Tickets	List All Conversations of a Ticket	/api/v2/tickets/[id]/conversations	#list_all_ticket_notes
+Tickets	List All Time Entries of a Ticket	/api/v2/tickets/[id]/time_entries	#list_all_ticket_timeentries
+Tickets	List All Satisfaction Ratings of a Ticket	/api/v2/tickets/[ticket_id]/satisfaction_ratings	#view_ticket_satisfaction_ratings
+Tickets	Ticket Summary API		#ticket_summary
+Tickets	Archive Tickets		#archive_tickets
+Tickets	Ticket User Access		#ticket_user_accesses
+Ticket Fields	Ticket Fields		#ticket_fields_attributes
+Ticket Fields	List All Ticket Fields	/api/v2/admin/ticket_fields	#list_all_ticket_fields
+Ticket Fields	Create a Ticket Field	/api/v2/admin/ticket_fields	#create_ticket_field
+Ticket Fields	View a Ticket Field	/api/v2/admin/ticket_fields/[id]	#view_ticket_field
+Ticket Fields	Update a Ticket Field	/api/v2/admin/ticket_fields/[id]	#update_ticket_field
+Ticket Fields	Delete a Ticket Field	/api/v2/admin/ticket_fields/[id]	#delete_ticket_field
+Ticket Fields	Sections		#section_attributes
+Ticket Fields	List All Sections for a Ticket Field	/api/v2/admin/ticket_fields/[id]/sections	#list_all_section_fields
+Ticket Fields	Create a Section	/api/v2/admin/ticket_fields/[id]/sections	#create_section
+Ticket Fields	List a specific Section details	/api/v2/admin/ticket_fields/[id]/sections/[section_id]	#list_specific_section
+Ticket Fields	Update a section	/api/v2/admin/ticket_fields/[id]/sections/[section_id]	#update_section
+Ticket Fields	Delete a section	/api/v2/admin/ticket_fields/[id]/sections/[section_id]	#delete_section
+Ticket Forms	Ticket Forms		#ticket_forms_attributes
+Ticket Forms	List All Ticket Forms	/api/v2/ticket-forms	#list_all_ticket_forms
+Ticket Forms	Create a Ticket Form	/api/v2/ticket-forms	#create_ticket_form
+Ticket Forms	View a Ticket Form	/api/v2/ticket-forms/[id]	#view_ticket_form
+Ticket Forms	Update a Ticket Form	/api/v2/ticket-forms/[id]	#update_ticket_form
+Ticket Forms	Delete a Ticket Form	/api/v2/ticket-forms/[id]	#delete_ticket_form
+Ticket Forms	Clone a Ticket Form	/api/v2/ticket-forms/[id]	#clone_ticket_form
+Ticket Forms	Ticket Form Fields		#ticket_form_field_attributes
+Ticket Forms	View A Ticket Form's Field	/api/v2/ticket-forms/[form-id]/fields/[field-id]	#view_ticket_form_field
+Ticket Forms	Update A Ticket Form's Field	/api/v2/ticket-forms/[form-id]/fields/[field-id]	#update_ticket_form_field
+Ticket Forms	Delete a Ticket Form's Field	/api/v2/ticket-forms/[form-id]/fields/[field-id]	#delete_ticket_form_field
+Conversations	Conversations		#note_attributes
+Conversations	Create a Reply	/api/v2/tickets/[id]/reply	#reply_ticket
+Conversations	Create a Note	/api/v2/tickets/[ticket_id]/notes	#add_note_to_a_ticket
+Conversations	Update a conversation	/api/v2/conversations/[id]	#update_conversation
+Conversations	Delete a conversation	/api/v2/conversations/[id]	#delete_conversation
+Conversations	Reply to Forward	/api/v2/tickets/[id]/reply_to_forward	#reply_to_forward
+Outbound Messages	Outbound Messages		#outbound_message_attributes
+Outbound Messages	Send Proactive Message	/api/v2/channels/outbound-messages	#send_outbound_message
+Outbound Messages	Retrieve Message	/api/v2/channels/outbound-messages/[message-id]	#retrieve_outbound_message
+Account	View Account	/api/v2/account	#view_account
+Account	Export Account	api/v2/account/export	#generate_export
+Jobs	View a Job	/api/v2/jobs/[id]	#view_job
+Contacts	Contacts		#contact_attributes
+Contacts	Create a Contact	/api/v2/contacts	#create_contact
+Contacts	View a Contact	/api/v2/contacts/[id]	#view_contact
+Contacts	List All Contacts	/api/v2/contacts	#list_all_contacts
+Contacts	Search Contacts	/api/v2/contacts/autocomplete?term=[keyword]	#search_contacts
+Contacts	Filter Contacts BETA	/api/v2/search/contacts?query=[query]	#filter_contacts
+Contacts	Update a Contact	/api/v2/contacts/[id]	#update_contact
+Contacts	Soft Delete a Contact	/api/v2/contacts/[id]	#delete_contact
+Contacts	Permanently Delete a Contact	/api/v2/contacts/[id]/hard_delete	#hard_delete_contact
+Contacts	Make Agent	/api/v2/contacts/[id]/make_agent	#make_agent
+Contacts	Restore a Contact	api/v2/contacts/[id]/restore	#restore_contact
+Contacts	Send Invite to a Contact	api/v2/contacts/[id]/send_invite	#send_invite
+Contacts	Merge Contacts	api/v2/contacts/merge	#merge_contact
+Contacts	Contact Export	api/v2/contacts/export	#export_contact
+Contacts	Contact Import	api/v2/contacts/imports	#import_contact
+Contact Fields	Contact Fields		#contact_fields
+Contact Fields	List all contact fields	/api/v2/contact_fields	#list_all_contact_fields
+Contact Fields	View a contact field	/api/v2/contact_fields/[id]	#view_contact_field
+Contact Fields	Create a contact field	/api/v2/contact_fields	#create_contact_field
+Contact Fields	Update a contact field	/api/v2/contact_fields/[id]	#update_contact_field
+Contact Fields	Delete a contact field	/api/v2/contact_field/[id]	#delete_contact_field
+Agents	Agents		#agent_attributes
+Agents	View an Agent	/api/v2/agents/[id]	#view_agent
+Agents	List All Agents	/api/v2/agents	#list_all_agents
+Agents	Create an Agent	/api/v2/agents/	#create_agent
+Agents	Update an Agent	/api/v2/agents/[id]	#update_agent
+Agents	Delete an Agent	/api/v2/agents/[id]	#delete_agent
+Agents	Currently Authenticated Agent	/api/v2/agents/me	#me
+Agents	Create Multiple Agents	/api/v2/agents/bulk	#create_multiple_agents
+Agents	Search Agents	/api/v2/agents/autocomplete?term=[keyword]	#search_agents
+Availability	List All Agents Availability	/api/v2/agents?page=1&per_page=10&only=availability	#list_all_agents_availability
+Availability	View Agent Availability	/api/v2/agents/[id]/availability	#view_agent_availability
+Availability	Update Agent load settings	/api/v2/agents/[id]/availability	#update_agent_availability
+Skills	Skills		#skill_attributes
+Skills	View a Skill	/api/v2/admin/skills/[id]	#view_skill
+Skills	List all Skills	/api/v2/admin/skills/	#list_all_skills
+Skills	Create a Skill	/api/v2/admin/skills	#create_skill
+Skills	Delete a Skill	/api/v2/admin/skills/[id]	#delete_skill
+Skills	Update a Skill	/api/v2/admin/skills/[id]	#update_skill
+Roles	Roles		#roles_attributes
+Roles	View a Role	/api/v2/roles/[id]	#view_role
+Roles	List All Roles	/api/v2/roles	#list_all_roles
+Groups	Groups		#groups_attributes
+Groups	Create a Group	/api/v2/groups	#create_group
+Groups	View a Group	/api/v2/groups/[id]	#view_group
+Groups	List All Groups	/api/v2/groups	#list_all_groups
+Groups	Update a Group	/api/v2/groups/[id]	#update_group
+Groups	Delete a Group	/api/v2/groups/[id]	#delete_group
+Admin-Groups	Groups		#admin_groups_attributes
+Admin-Groups	Create a Group	/api/v2/admin/groups	#create_admin_group
+Admin-Groups	View a Group	/api/v2/admin/groups/[id]	#view_admin_group
+Admin-Groups	List All Groups	/api/v2/admin/groups	#list_all_admin_groups
+Admin-Groups	Update a Group	/api/v2/admin/groups/[id]	#update_admin_group
+Admin-Groups	Delete a Group	/api/v2/admin/groups/[id]	#delete_admin_group
+Admin-Groups	List All Agents in a Group	/api/v2/admin/groups/[id]/agents	#list_all_agents_in_a_group
+Admin-Groups	Add or Remove Agents in a Group	/api/v2/admin/groups/[id]/agents	#add_or_remove_agent_in_a_group
+Admin-Groups	Omnichannel Group		#_omni_channel_group
+Companies	Companies		#companies_attributes
+Companies	Create a Company	/api/v2/companies	#create_company
+Companies	View a Company	/api/v2/companies/[id]	#view_company
+Companies	List All Companies	/api/v2/companies	#list_all_companies
+Companies	Search Companies	/api/v2/companies/autocomplete?name=[keyword]	#search_companies
+Companies	Filter Companies BETA	/api/v2/search/companies?query=[query]	#filter_companies
+Companies	Update a Company	/api/v2/companies/[id]	#update_company
+Companies	Delete a Company	/api/v2/companies/[id]	#delete_company
+Companies	Company Export	api/v2/companies/export	#export_company
+Companies	Company Import	api/v2/companies/imports	#import_company
+Company Fields	Company Fields		#company_fields
+Company Fields	List all company fields	/api/v2/company_fields	#list_all_company_fields
+Company Fields	View a company field	/api/v2/company_fields/[id]	#view_company_field
+Company Fields	Create a company field	api/v2/company_fields	#create_company_field
+Company Fields	Update a company field	api/v2/company_field/[id]	#update_company_field
+Company Fields	Delete a company field	api/v2/company_field/[id]	#delete_company_field
+Custom Objects	Custom Objects		#custom_objects_response_folder
+Custom Objects	Create A Custom Object		#creating_a_custom_object
+Custom Objects	Retrieve Existing Custom Objects	/api/v2/custom_objects/schemas	#retrieve_existing_custom_objects
+Custom Objects	Retrieve A Specific Custom Object	/api/v2/custom_objects/schemas/{schema-id}	#retrieve_specific_custom_object
+Custom Objects	Create A Record	/api/v2/custom_objects/schemas/schema-id/records/	#create_a_new_custom_object_record
+Custom Objects	Retrieve A Record	/api/v2/custom_objects/schemas/{schema-id}/records/{record-id}	#retrieve_a_custom_object_record
+Custom Objects	Update A Record	/api/v2/custom_objects/schemas/schema-id/records/{record-id}	#update_a_custom_object_record
+Custom Objects	Delete A Record	/api/v2/custom_objects/schemas/schema-id/records/{record-id}	#delete_a_custom_object_record
+Custom Objects	Retrieve All Records	/api/v2/custom_objects/schemas/schema-id/records	#retrieve_all_the_records_of_a_custom_object
+Custom Objects	Retrieve The Count Of Records	/api/v2/custom_objects/schemas/schema_id/records/count	#retrieve_the_count_of_records_custom_objects
+Custom Objects	Filter Records Of A Custom Object	/api/v2/custom_objects/schemas/schema_id/records?{field-name}{operator}{value}	#filter_records_of_custom_objects
+Custom Objects	Error Descriptions		#error_descriptions
+Canned Responses	Canned Responses		#canned_response_folder_attributes
+Canned Responses	Create a canned response	/api/v2/canned_responses	#create_canned_response
+Canned Responses	View a Canned Response	/api/v2/canned_responses/[id]	#view_canned_response
+Canned Responses	Update a canned response	api/v2/canned_responses/[id]	#update_canned_response
+Canned Responses	Bulk Create Canned Responses	/api/v2/canned_responses/bulk	#bulk_create_canned_responses
+Canned Responses	Create Folder	/api/v2/canned_response_folder	#create_canned_response_folder
+Canned Responses	Update Folder	/api/v2/canned_response_folder/[id]	#update_canned_response_folder
+Canned Responses	List All Folders	/canned_response_folders	#list_all_canned_response_folders
+Canned Responses	List All Canned Responses in a Folder	/canned_response_folders/[id]	#view_canned_response_folders
+Canned Responses	Get details of Canned Responses in a Folder	/canned_response_folders/[id]/responses	#get_details_of_canned_responses_in_folders
+Discussions	Discussions		#discussion_content
+Discussions	Categories		#category_attributes
+Discussions	Forums		#forum_attributes
+Discussions	Topics		#topic_attributes
+Discussions	comments		#comment_attributes
+Solutions	Solutions		#solution_content
+Solutions	Categories		#solution_category_attributes
+Solutions	Folders		#solution_folder_attributes
+Solutions	Articles		#solution_article_attributes
+Field Service Management	Introduction		#field_service_overview
+Field Service Management	Service Task		#service_task
+Field Service Management	Service Group		#service_group
+Field Service Management	Field Technicians		#field_technicians
+Time Entries	Time Entries		#time_entries_attributes
+Time Entries	Create a Time Entry	/api/v2/tickets/[ticket_id]/time_entries	#create_time_entry
+Time Entries	List All Time Entries	/api/v2/time_entries	#list_all_time_entries
+Time Entries	Update a Time Entry	/api/v2/time_entries/[id]	#update_time_entry
+Time Entries	Start/Stop Timer	/api/v2/time_entries/[time_entry_id]/toggle_timer	#toggle_time_entry
+Time Entries	Delete a Time Entry	/api/v2/time_entries/[id]	#delete_time_entry
+Email Configs	Email Configs		#email_configs_attributes
+Email Configs	View an Email Config	/api/v2/email_configs/[id]	#view_email_config
+Email Configs	List All Email Configs	/api/v2/email_configs	#list_all_email_configs
+Email Mailboxes	Email Mailboxes NEW		#email_mailboxes_attributes
+Email Mailboxes	Create an Email Mailbox	/api/v2/email/mailboxes	#create_email_mailbox
+Email Mailboxes	View an Email Mailbox	/api/v2/email/mailboxes/[id]	#view_email_mailbox
+Email Mailboxes	List All Email Mailboxes	/api/v2/email/mailboxes	#list_all_email_mailboxes
+Email Mailboxes	Update an Email Mailbox	/api/v2/email/mailboxes/[id]	#update_email_mailbox
+Email Mailboxes	Delete an Email Mailbox	/api/v2/email/mailboxes/[id]	#delete_email_mailbox
+Email Mailboxes	Update Mailbox Settings	/api/v2/email/settings	#update_mailbox_settings
+Email Mailboxes	View Mailbox Settings	/api/v2/email/settings	#view_mailbox_settings
+Email Mailboxes	Update Automatic Bcc emails	/api/v2/notifications/email/bcc	#update_automatic_bcc_emails
+Email Mailboxes	View Automatic Bcc emails	/api/v2/notifications/email/bcc	#view_automatic_bcc_emails
+Products	Products		#products_attributes
+Products	View a Product	/api/v2/products/[id]	#view_product
+Products	List All Products	/api/v2/products	#list_all_products
+Business Hours	Business Hours		#business_hour_attributes
+Business Hours	View a Business Hour	/api/v2/business_hours/[id]	#view_business_hour
+Business Hours	List All Business Hours	/api/v2/business_hours	#list_all_business_hours
+Scenario Automations	Scenario Automations		#scenario_automation_attributes
+Scenario Automations	List All Scenario Automations	/scenario_automations.json	#list_all_scenario_automations
+SLA Policies	SLA Policies		#sla_policy_attributes
+SLA Policies	Create SLA Policies	/api/v2/sla_policies	#create_sla_policy
+SLA Policies	List All SLA Policies	/api/v2/sla_policies	#list_all_sla_policies
+SLA Policies	Update an SLA Policy	/api/v2/sla_policies/[id]	#update_sla_policy
+Omnichannel Activities	Omnichannel Activities		#omnichannel_activity
+Omnichannel Activities	Publish Activities	/api/v2/contact-activities	#publish_omnichannel_activity
+Automations	List All Automation Rules	/api/v2/automations/[automation_type_id]/rules	#list_all_automation_rules
+Automations	View an Automation Rule	/api/v2/automations/[automation_type_id]/rules/[id]	#view_an_automation_rule
+Automations	Delete an Automation Rule	/api/v2/automations/[automation_type_id]/rules/[id]	#delete_an_automation_rule
+Automations	Create an Automation Rule	/api/v2/automations/[automation_type_id]/rules	#create_an_automation_rule
+Automations	Update an Automation Rule	/api/v2/automations/[automation_type_id]/rules/[id]	#update_an_automation_rule
+Settings	Settings		#settings_attributes
+Settings	View Helpdesk Settings	/api/v2/settings/helpdesk	#settings_helpdesk
+Threads	Threads		#thread_attributes
+Threads	Create a thread	api/v2/collaboration/threads	#create_a_thread
+Threads	Get a thread	api/v2/collaboration/threads/[id]	#get_a_thread
+Threads	Update a thread	api/v2/collaboration/threads/[id]	#update_a_thread
+Threads	Delete a thread	api/v2/collaboration/threads/[id]	#delete_a_thread
+Threads	Thread messages		#thread_message_attributes
+Threads	Create message for thread	api/v2/collaboration/messages	#create_message_for_thread
+Threads	Get message for thread	api/v2/collaboration/messages/[id]	#get_message_for_thread
+Threads	Update message for thread	api/v2/collaboration/messages/[id]	#update_message_for_thread
+Threads	Delete message for thread	api/v2/collaboration/messages/[id]	#delete_message_for_thread
+Threads	Get quoted text for message	api/v2/collaboration/messages/[id]/generate-quote	#get_quoted_text

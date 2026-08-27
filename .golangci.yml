@@ -1,0 +1,112 @@
+# Every linter golangci-lint ships is enabled by default below. The handful
+# disabled at the end are ones that cannot hold in this codebase; each carries
+# the reason it is off rather than being silently dropped.
+version: "2"
+
+linters:
+  default: all
+
+  disable:
+    # Request types model a REST API where almost every field is optional, so
+    # a literal that sets three of forty fields is the norm, not an omission.
+    - exhaustruct
+    - exhaustruct_v5
+    # Objects to idiomatic short names (c *Client, w, r, tc, id) that are
+    # clearer here than the long names it would require.
+    - varnamelen
+    # Opinionated blank-line placement that fights gofmt's own idiom; the
+    # `whitespace` linter already covers the cases that matter.
+    - wsl
+    - wsl_v5
+    - nlreturn
+    # Forbids `if err := f(); err != nil`, which is standard Go style.
+    - noinlineerr
+    # The tests deliberately live in the same package: they exercise
+    # unexported helpers (backoff, parseError, resolve) directly.
+    - testpackage
+    # The plugin framework dictates that every resource and data source
+    # constructor returns an interface; that is the contract, not a smell.
+    - ireturn
+    # The godoc examples show how to call a live API, so they carry no Output
+    # comment and are compiled but not run. That is the point of them.
+    - testableexamples
+
+  settings:
+    # A Terraform provider legitimately depends on the plugin framework and the
+    # HashiCorp toolchain around it; everything else must be the standard
+    # library or this module.
+    depguard:
+      rules:
+        main:
+          list-mode: lax
+          deny:
+            - pkg: github.com/pkg/errors
+              desc: use the standard library's errors package
+            - pkg: io/ioutil
+              desc: deprecated; use io and os
+    funlen:
+      # Terraform schemas are long declarative blocks by nature; splitting one
+      # across helpers hurts far more than it helps.
+      lines: 400
+      statements: 120
+    # JSON tags must match Freshdesk's wire format, which is snake_case.
+    tagliatelle:
+      case:
+        rules:
+          json: snake
+    cyclop:
+      max-complexity: 15
+    gocognit:
+      min-complexity: 25
+    goconst:
+      min-len: 3
+      # Schema attribute names repeat between a resource and its data source by
+      # design, and must match the API's field names verbatim. Six occurrences
+      # is above that natural floor, so what is left is real duplication.
+      min-occurrences: 6
+      ignore-tests: true
+    lll:
+      line-length: 120
+    errcheck:
+      check-type-assertions: true
+    revive:
+      rules:
+        - name: exported
+          arguments:
+            - disableStutteringCheck
+
+  exclusions:
+    rules:
+      # Terraform schema attribute names are dictated by the API's wire format
+      # and are declared once in a resource and again in its data source.
+      # Hoisting them into constants would leave the schemas far less legible
+      # while adding no safety, since a wrong constant reads the same as a
+      # wrong literal.
+      - path: internal/provider/
+        linters:
+          - goconst
+      # Table-driven tests are long and branchy by nature; that is the point
+      # of the pattern, not a defect in it.
+      - path: _test\.go
+        linters:
+          - funlen
+          - gocognit
+          - cyclop
+          - maintidx
+          - dupl
+      # Acceptance tests share one Freshdesk account and its hourly request
+      # budget, so they must run in sequence; and a CheckDestroy that returns
+      # the API's own error unwrapped is exactly what the harness prints.
+      - path: acc_.*_test\.go|acc_test\.go
+        linters:
+          - paralleltest
+          - wrapcheck
+
+formatters:
+  enable:
+    - gofmt
+    - goimports
+
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0

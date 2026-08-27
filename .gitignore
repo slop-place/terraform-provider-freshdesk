@@ -1,0 +1,14 @@
+# Credentials — never commit these.
+.env
+
+# Build output
+/terraform-provider-freshdesk
+/dist/
+coverage.out
+
+# Terraform working files
+.terraform/
+.terraform.lock.hcl
+*.tfstate
+*.tfstate.*
+crash.log
