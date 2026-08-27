@@ -6,6 +6,13 @@ description: |-
 
 # Freshdesk Provider
 
+~> **This provider is 100% AI-generated.** Every line of it — the client, the
+resources, the tests and this documentation — was written by Claude, not by a
+human. It has been exercised against a live Freshdesk account, and the
+acceptance suite covers every resource and data source, but no human has
+reviewed the code line by line. Read it before you trust it with a production
+helpdesk.
+
 Manage a [Freshdesk](https://freshdesk.com) helpdesk as code. The provider covers
 the whole of the [Freshdesk API v2](https://developers.freshdesk.com/api/):
 agents and groups, contacts and companies, ticket and contact fields, SLA

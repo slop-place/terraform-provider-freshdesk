@@ -1,5 +1,13 @@
 # Terraform Provider for Freshdesk
 
+> [!IMPORTANT]
+> **This provider is 100% AI-generated.** Every line of it — the client, the
+> resources, the tests, the documentation and this README — was written by
+> Claude, not by a human. It has been exercised against a live Freshdesk
+> account, and the acceptance suite covers every resource and data source, but
+> no human has reviewed the code line by line. Read it before you trust it with
+> a production helpdesk.
+
 Manage a [Freshdesk](https://freshdesk.com) helpdesk as code: agents and groups,
 contacts and companies, ticket and contact fields, SLA policies, automation
 rules, the knowledge base, community forums, mailboxes and tickets.
